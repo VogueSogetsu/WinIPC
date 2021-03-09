@@ -1,0 +1,78 @@
+// WinIPC.idl : IDL source for WinIPC
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (WinIPC.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+typedef enum
+{
+    IPC_ET_SENDER,
+    IPC_ET_RECEIVER,
+} enumIPCEvenType;
+
+[
+	uuid(DCF17584-06B8-4d54-90E0-A0D8E545DFB0),	
+	helpstring("IWinIPCEvent 接口"),
+	pointer_default(unique)
+]
+interface IWinIPCEvent : IUnknown
+{
+	HRESULT OnConnect([in] VARIANT_BOOL vbIsSender, [in] ULONG lTargetID);
+	HRESULT OnReceiverDisconnect([in] ULONG lTargetID);
+    HRESULT OnSendFinish([in] ULONG lOffset, [in] ULONG lTargetID, [in] LONG lRet);
+	HRESULT OnReceiveData([in] ULONG lSenderID, [in] BYTE * lBuffer, [in] ULONG lSize);
+	HRESULT OnReceiveMsg([in] ULONG lSenderID, [in] LONG lParam1, [in] LONG lParam2);
+}
+
+[
+	object,
+	uuid(76DF9AC1-37B5-4BE7-B547-629D24070CAE),
+	dual,
+	nonextensible,
+	helpstring("IWinIPCPeer 接口"),
+	pointer_default(unique)
+]
+interface IWinIPCPeer : IDispatch{
+    [propget, id(1), helpstring("属性 isSender")] HRESULT isSender([out, retval] VARIANT_BOOL* pVal);
+    [propget, id(2), helpstring("属性 isReceiver")] HRESULT isReceiver([out, retval] VARIANT_BOOL* pVal);
+    [propget, id(3), helpstring("属性 productID")] HRESULT productID([out, retval] LONG* pVal);
+
+    [id(100), helpstring("方法AddEventHandler"), local] HRESULT AddEventHandler([in] IUnknown* pHandler);
+    [id(101), helpstring("方法RemoveEventHandler"), local] HRESULT RemoveEventHandler([in] IUnknown* pEventHandler);
+
+    [id(102), helpstring("方法AddSenderProductID")] HRESULT AddSenderProductID([in] LONG lProductID);
+    [id(103), helpstring("方法AddReceiverProductID")] HRESULT AddReceiverProductID([in] LONG lProductID);
+
+    [id(104), helpstring("方法RemoveSenderProductID")] HRESULT RemoveSenderProductID([in] LONG lProductID);
+    [id(105), helpstring("方法RemoveReceiverProductID")] HRESULT RemoveReceiverProductID([in] LONG lProductID);
+
+    [id(106), helpstring("方法SendData"), local] HRESULT SendData([in] BYTE* pBuffer, [in] ULONG ulSize, [in] VARIANT_BOOL vbSync);
+    [id(107), helpstring("方法ClosePeer")] HRESULT ClosePeer();
+
+	[id(108), helpstring("方法SendDataToSpecialProduct"), local] HRESULT SendDataToSpecialProduct([in] LONG lProductID, [in] BYTE* pBuffer, [in] ULONG ulSize, [in] VARIANT_BOOL vbSync);
+
+	[id(109), helpstring("方法IsSenderConnected")] HRESULT IsSenderConnected([in] LONG lProductID, [out, retval] VARIANT_BOOL* pVal);
+	[id(110), helpstring("方法IsReceivererConnected")] HRESULT IsReceiverConnected([in] LONG lProductID, [out, retval] VARIANT_BOOL* pVal);
+
+	[id(111), helpstring("方法SendMsgToSpecialProduct"), local] HRESULT SendMsgToSpecialProduct([in] LONG lProductID, [in] LONG lParam1, [in] LONG lParam2);
+};
+[
+	uuid(0DF66FA3-3EC9-41FC-AC89-6FF399B001FA),
+	version(1.0),
+	helpstring("WinIPC 1.0 Type Library")
+]
+library WinIPCLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(9C2B4EB1-F1E1-4E67-8BB8-12F0B18EC4F3),
+		helpstring("WinIPCPeer Class")
+	]
+	coclass WinIPCPeer
+	{
+		[default] interface IWinIPCPeer;
+	};
+};

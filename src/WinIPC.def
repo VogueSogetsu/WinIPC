@@ -1,0 +1,11 @@
+; WinIPC.def : Declares the module parameters.
+
+LIBRARY      "WinIPC.DLL"
+
+EXPORTS
+	DllCanUnloadNow		PRIVATE
+	DllGetClassObject	PRIVATE
+	DllRegisterServer	PRIVATE
+	DllUnregisterServer	PRIVATE
+	CreateIPCPeer		PRIVATE
+	CreateIPCPeerArray	PRIVATE

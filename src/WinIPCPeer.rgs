@@ -1,0 +1,27 @@
+HKCR
+{
+	WinIPC.WinIPCPeer.1 = s 'WinIPCPeer Class'
+	{
+		CLSID = s '{9C2B4EB1-F1E1-4E67-8BB8-12F0B18EC4F3}'
+	}
+	WinIPC.WinIPCPeer = s 'WinIPCPeer Class'
+	{
+		CLSID = s '{9C2B4EB1-F1E1-4E67-8BB8-12F0B18EC4F3}'
+		CurVer = s 'WinIPC.WinIPCPeer.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {9C2B4EB1-F1E1-4E67-8BB8-12F0B18EC4F3} = s 'WinIPCPeer Class'
+		{
+			ProgID = s 'WinIPC.WinIPCPeer.1'
+			VersionIndependentProgID = s 'WinIPC.WinIPCPeer'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			val AppID = s '%APPID%'
+			'TypeLib' = s '{0DF66FA3-3EC9-41FC-AC89-6FF399B001FA}'
+		}
+	}
+}
